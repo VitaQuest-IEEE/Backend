@@ -27,7 +27,7 @@ abstract class AuthAbstract
 {
     use ApiResponseTrait;
 
-    protected bool $loginRequireSendOTP;
+//    protected bool $loginRequireSendOTP;
     public $model;
 
     public function __construct(User $model)
@@ -43,16 +43,8 @@ abstract class AuthAbstract
     {
         $request->authenticate();
         $user = $request->user();
-
-//        if (!$user->isActive())
-//            throw AuthException::accountStatusDeactive(['deactive' => [__("Account Deactive")]]);
-
         $user->access_token = $user->createToken('snctumToken', $abilities ?? [])->plainTextToken;
         $this->addTokenExpiration($user->access_token);
-
-        if ($this->loginRequireSendOTP)
-            return $this->handelOTPMethod($user);
-
         return $user;
     }
 
@@ -169,7 +161,6 @@ abstract class AuthAbstract
 
     public function logout(Request $request)
     {
-
         $request->user()?->currentAccessToken()->delete();
     }
 
@@ -189,9 +180,9 @@ abstract class AuthAbstract
         return $this->handelOTPMethod($user);
     }
 
-    public function profile(Request $request)
+    public function profile( )
     {
-        $user = $request->user();
+        $user = auth()->user();
         if (is_null($user))
             throw AuthException::userNotFound(['not_found' => [__("Data Not Found")]]);
         return $user;

@@ -32,7 +32,6 @@ class AuthClientService extends AuthAbstract
             return $this->respondWithSuccess(__('Deleted Successfully'));
         }
         DB::rollBack();
-
         return $this->setStatusCode(400)->respondWithError(__('Failed Operation'));
     }
 

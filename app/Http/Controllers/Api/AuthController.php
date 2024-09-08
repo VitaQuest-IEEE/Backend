@@ -20,23 +20,32 @@ class AuthController extends Controller
 {
     use ApiResponseTrait;
 
-    use ApiResponseTrait;
+    private $authClientService;
 
+    private string $modelResource = ClientResource::class;
+    private array $relations = [];
+
+    public function __construct(AuthClientService $authClientService)
+    {
+        $this->authClientService = $authClientService;
+    }
+
+    /**
+     * Client Login.
+     *
+     * an API which Offers a mean to login a client
+     * @unauthenticated
+     * @header Api-Key xx
+     * @header Api-Version v1
+     * @header Accept-Language ar
+     */
     public function login(LoginClientRequest $request)
     {
-        $request->authenticate();
-        $user = $request->user();
-        if($request->has('device_token'))
-        {
-            $user->deviceTokens()->updateOrCreate(['device_token' => $request->device_token]);
-        }
-        $user->access_token = $user->createToken('snctumToken', $abilities ?? [])->plainTextToken;
-        $this->addTokenExpiration($user->access_token);
-
-        return $this->respondWithJson(
-            UserResource::make($user)
+        return $this->respondWithModelData(
+            new ClientResource(
+                $this->authClientService->login($request)
+            )
         );
-
     }
     protected function addTokenExpiration($accessToken): void
     {
@@ -58,34 +67,20 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $this->authClientService->logout($request);
         return $this->respondWithSuccess(__('Logged out successfully'));
     }
     public function profile()
     {
-        $user=auth()->user();
-        if(is_null($user))
-            return $this->respondWithError(__('Failed Operation'));
+        $user= $this->authClientService->profile();
 
         return $this->respondWithJson(UserResource::make($user));
     }
 
     public function deleteAccount(Request $request)
     {
-        $user = $request->user();
-        if(is_null($user))
-            throw AuthException::userNotFound(['unauthorized' => [__('Unauthorized')]],401);
-
-        DB::beginTransaction();
-        $user->tokens()->delete();
-        if($user->delete())
-        {
-            DB::commit();
-            return $this->respondWithSuccess(__('Deleted Successfully'));
-        }
-        DB::rollBack();
-
-        return $this->setStatusCode(400)->respondWithError(__('Failed Operation'));
+       $this->authClientService->deleteAccount($request);
+       return $this->respondWithSuccess(__('Deleted Successfully'));
     }
 
 
