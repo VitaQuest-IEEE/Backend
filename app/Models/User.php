@@ -46,4 +46,21 @@ class User extends Authenticatable
         return $this->morphMany(DeviceToken::class, 'tokenable');
     }
 
+
+    public function chats()
+    {
+        return $this->belongsToMany(Chat::class, 'chat_user')
+            ->withTimestamps();
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class,'sender_id');
+    }
+    public function ai_results()
+    {
+        return $this->belongsToMany(AiResult::class, 'ai_result_user')
+            ->withTimestamps();
+    }
+
 }
