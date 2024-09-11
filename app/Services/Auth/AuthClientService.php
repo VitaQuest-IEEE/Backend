@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class AuthClientService extends AuthAbstract
@@ -42,8 +43,7 @@ class AuthClientService extends AuthAbstract
 
         $data = $request->validated();
         $data['password'] = bcrypt($data['password']);
-        unset($data['password_confirmation']);
-        unset($data['image']);
+        $data = Arr::except($request->validated(), ['password_confirmation', 'image']);
         $user = User::create($data);
         if(!$user->wasRecentlyCreated)
             throw AuthException::userFailedRegistration(['genration_failed' => [__("Failed Operation")]]);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Notification\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,14 @@ Route::prefix("auth")->group(function () {
             Route::delete('delete-account', [AuthController::class, 'deleteAccount']);
             Route::post('update-profile', [AuthController::class, 'updateProfile']);
 
+
+
+            #Notifications
+                Route::get('unread-notifications', [NotificationController::class, 'index']);
+            Route::get('mark-as-read', [NotificationController::class, 'markAsRead']);
+            Route::get('mark-as-read/{id}', [NotificationController::class, 'markAsReadById']);
+            Route::get('count-unread-notifications', [NotificationController::class, 'unreadNotificationsCount']);
+            Route::get('show-notification/{id}', [NotificationController::class, 'showNotification']);
 
         });
 
