@@ -41,15 +41,20 @@ class AuthClientService extends AuthAbstract
             throw AuthException::wrongImplementation(['wrong_implementation' => [__("Failed Operation")]]);
 
         $data = $request->validated();
-        $data['is_active'] = 1;
-
+        $data['password'] = bcrypt($data['password']);
+        unset($data['password_confirmation']);
+        unset($data['image']);
         $user = User::create($data);
         if(!$user->wasRecentlyCreated)
             throw AuthException::userFailedRegistration(['genration_failed' => [__("Failed Operation")]]);
 
+        if($request->hasFile('image'))
+        {
+            $user->addMediaFromRequest('image')->toMediaCollection('images');
+        }
         $user->access_token = $user->createToken('snctumToken',$abilities ?? [])->plainTextToken;
         $this->addTokenExpiration($user->access_token);
 
-        return $this->handelMobileOTP($user);
+        return $user;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\Api\Auth\AuthException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\LoginClientRequest;
+use App\Http\Requests\Api\Auth\RegisterClientRequest;
 use App\Http\Resources\Api\Auth\ClientResource;
 use App\Http\Resources\Api\Auth\UserResource;
 use App\Models\User;
@@ -47,23 +48,7 @@ class AuthController extends Controller
             )
         );
     }
-    protected function addTokenExpiration($accessToken): void
-    {
-        $expirationTime = Carbon::now()->addDays(90);
-        $personalAccessToken = PersonalAccessToken::findToken($accessToken);
-        $personalAccessToken->expires_at = $expirationTime;
-        $personalAccessToken->save();
-    }
-    protected function isTokenExpired($personalAccessToken)
-    {
-        $isExpired = false;
-        $expirationTime = $personalAccessToken->expires_at;
-        if ($expirationTime == null)
-            $isExpired = true;
-        if ($expirationTime instanceof Carbon && $expirationTime->isPast())
-            $isExpired = true;
-        return $isExpired;
-    }
+
 
     public function logout(Request $request)
     {
@@ -77,6 +62,11 @@ class AuthController extends Controller
         return $this->respondWithJson(UserResource::make($user));
     }
 
+    public function register(RegisterClientRequest $request)
+    {
+        $user = $this->authClientService->register($request);
+        return $this->respondWithModelData(new UserResource($user));
+    }
     public function deleteAccount(Request $request)
     {
        $this->authClientService->deleteAccount($request);

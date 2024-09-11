@@ -33,9 +33,11 @@ class RegisterClientRequest extends FormRequest
     {
         return [
             "name" => ["required","string","max:190"],
-            "mobile" => ["required","unique:users,mobile"],
+            "phone" => ["required","unique:users,phone"],
             "email" => ["sometimes","unique:users,email"],
             "password" => ["required","confirmed",Password::default()],
+            "type"=>["required"],
+            "image"=>["sometimes","image","mimes:jpeg,png,jpg,gif,svg","max:2048"],
         ];
     }
 
@@ -43,10 +45,12 @@ class RegisterClientRequest extends FormRequest
     {
         return [
             'name' => __('Name'),
-            'mobile' => __('Mobile'),
+            'phone' => __('Mobile'),
             'email' => __('E-Mail'),
             'password' => __('Password'),
             'password_confirmation' => __('Password Confirmation'),
+            'type'=>__('User Type'),
+            'image'=>__('Image'),
         ];
     }
 }

@@ -21,6 +21,7 @@ Route::prefix("auth")->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('forget-password', [AuthController::class, 'forgetPassword']);
     Route::post('check-phone', [AuthController::class, 'checkIfPhoneIsExist']);
+    Route::post('register',[AuthController::class, 'register']);
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('logout',[AuthController::class, 'logout']);
             Route::post('auto-login', [AuthController::class, 'autoLogin']);

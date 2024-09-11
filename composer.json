@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "mcamara/laravel-localization": "^2.0",
+        "spatie/laravel-medialibrary": "^11.9",
         "yajra/laravel-datatables": "10.1"
     },
     "require-dev": {
