@@ -49,4 +49,5 @@ The project follows an Object-Oriented Programming (OOP) structure, with the fol
 
 ![](/public/assets/img/ieee.jpg)
 ![](/public/assets/img/class.jpeg)
+![](/public/assets/img/UML.jpg)
 ![](/public/assets/img/ERD.png)
