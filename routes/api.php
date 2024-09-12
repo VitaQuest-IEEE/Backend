@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Notification\NotificationController;
+use App\Http\Controllers\Api\VitaminsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,9 @@ Route::prefix("auth")->group(function () {
             Route::get('count-unread-notifications', [NotificationController::class, 'unreadNotificationsCount']);
             Route::get('show-notification/{id}', [NotificationController::class, 'showNotification']);
 
+
+            #Vitamins
+            Route::resource('vitamins', VitaminsController::class);
         });
 
 });
