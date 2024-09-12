@@ -47,3 +47,6 @@ The project follows an Object-Oriented Programming (OOP) structure, with the fol
 - **User - Chat**: Many-to-many relationship between users and chat rooms.
 - **Chat - Messages**: One-to-many relationship between chat rooms and messages.
 
+![](/public/assets/img/ieee.jpg)
+![](/public/assets/img/class.jpeg)
+![](/public/assets/img/ERD.png)
